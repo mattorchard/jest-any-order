@@ -1,0 +1,23 @@
+{
+  "name": "jest-any-order",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "jest": "^27.5.1"
+  },
+  "devDependencies": {
+    "prettier": "^2.5.1"
+  },
+  "jest": {
+    "setupFilesAfterEnv": [
+      "./src/jest.setup.js"
+    ]
+  }
+}

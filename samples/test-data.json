@@ -1,0 +1,41 @@
+{
+  "expected": [
+    {
+      "name": "Alice",
+      "id": 1
+    },
+    {
+      "name": "Bob",
+      "id": 2
+    },
+    {
+      "name": "Charlie",
+      "id": 3
+    }
+  ],
+  "expectedSubset": [
+    {
+      "name": "Alice"
+    },
+    {
+      "name": "Bob"
+    },
+    {
+      "name": "Charlie"
+    }
+  ],
+  "actual": [
+    {
+      "name": "Bob",
+      "id": 2
+    },
+    {
+      "name": "Alice",
+      "id": 1
+    },
+    {
+      "name": "Charlie",
+      "id": 3
+    }
+  ]
+}
