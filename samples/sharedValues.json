@@ -1,5 +1,5 @@
 {
-  "expected": [
+  "peopleOrdered": [
     {
       "name": "Alice",
       "id": 1
@@ -13,7 +13,21 @@
       "id": 3
     }
   ],
-  "expectedSubset": [
+  "peopleShuffled": [
+    {
+      "name": "Bob",
+      "id": 2
+    },
+    {
+      "name": "Alice",
+      "id": 1
+    },
+    {
+      "name": "Charlie",
+      "id": 3
+    }
+  ],
+  "peopleNames": [
     {
       "name": "Alice"
     },
@@ -22,20 +36,6 @@
     },
     {
       "name": "Charlie"
-    }
-  ],
-  "actual": [
-    {
-      "name": "Bob",
-      "id": 2
-    },
-    {
-      "name": "Alice",
-      "id": 1
-    },
-    {
-      "name": "Charlie",
-      "id": 3
     }
   ]
 }

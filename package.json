@@ -1,15 +1,20 @@
 {
   "name": "jest-any-order",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "version": "0.1.0",
+  "description": "Expect array content ignoring order",
+  "main": "src/main.js",
+  "types": "src/main.d.ts",
   "scripts": {
     "test": "jest"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
+  "keywords": ["jest", "expect", "any", "order"],
+  "license": "MIT",
+  "homepage": "https://github.com/mattorchard/jest-any-order",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mattorchard/jest-any-order.git"
+  },
+  "peerDependencies": {
     "jest": "^27.5.1"
   },
   "devDependencies": {
@@ -17,7 +22,7 @@
   },
   "jest": {
     "setupFilesAfterEnv": [
-      "./src/jest.setup.js"
+      "./src/main.js"
     ]
   }
 }

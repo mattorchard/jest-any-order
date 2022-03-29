@@ -1,16 +1,20 @@
-const { expected, actual, expectedSubset } = require("./test-data.json");
+const {
+  peopleShuffled,
+  peopleOrdered,
+  peopleNames,
+} = require("./sharedValues.json");
 
 describe("passing cases", () => {
   it("on object subset", () => {
-    expect(actual).toMatchContents(expectedSubset);
+    expect(peopleShuffled).toMatchContents(peopleNames);
   });
 
   it("on full match", () => {
-    expect(actual).toMatchContents(expected);
+    expect(peopleShuffled).toMatchContents(peopleOrdered);
   });
 
   it("on strict equal", () => {
-    expect(actual).toEqualContents(expected);
+    expect(peopleShuffled).toEqualContents(peopleOrdered);
   });
 });
 
@@ -27,7 +31,7 @@ describe("failing cases", () => {
 
   it.each([
     [
-      () => expect(actual).toEqualContents(expectedSubset),
+      () => expect(peopleShuffled).toEqualContents(peopleNames),
       `Missing three items`,
     ],
     [
@@ -43,18 +47,15 @@ describe("failing cases", () => {
       `Received array has MORE items than expected`,
     ],
     [() => expect([]).toMatchContents([1]), `Missing one matching item`],
-    [
-      () => expect([]).not.toMatchContents(expected),
-      `cannot be used with '.not'`,
-    ],
-  ])("Fails with expected message", (codeUnderTest, messagePattern) => {
+    [() => expect([]).not.toMatchContents([]), `cannot be used with '.not'`],
+  ])("Fails with expected message ($2)", (codeUnderTest, messagePattern) => {
     const monochromeMessage = getMonochromeErrorMessage(codeUnderTest);
     expect(monochromeMessage).toMatch(messagePattern);
   });
 
   it("missing item 'Arnold'", () => {
     const codeUnderTest = () =>
-      expect(actual).toMatchContents([
+      expect(peopleShuffled).toMatchContents([
         { name: "Arnold" }, // Not in real dataset
         { name: "Bob" },
         { name: "Charlie" },
