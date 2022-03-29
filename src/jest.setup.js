@@ -1,27 +1,53 @@
-const getTypeName = (value) =>
-  value ? value.constructor.toString() : `${value}`;
+function toMatchContentsInner(received, expected, strictEqual = false) {
+  const {
+    matcherHint,
+    printExpected,
+    printReceived,
+    pluralize,
+    EXPECTED_COLOR,
+    RECEIVED_COLOR,
+  } = this.utils;
 
-const toMatchContentsInner = (actual, expected, strictEqual = false) => {
+  const prefix =
+    matcherHint(strictEqual ? "toEqualContents" : "toMatchContents") + "\n\n";
+
+  const formatLines = (...lines) => prefix + lines.join("\n");
+
   if (!Array.isArray(expected))
     return {
-      pass: false,
       message: () =>
-        `Expected value must be an array but got ${getTypeName(expected)}`,
+        formatLines(
+          `Expected value must be an array but got: ${printExpected(expected)}`
+        ),
+      pass: false,
     };
-  if (!Array.isArray(actual))
+  if (!Array.isArray(received))
     return {
-      pass: false,
       message: () =>
-        `Received value must be an array but got ${getTypeName(actual)}`,
+        formatLines(
+          `Received value must be an array but got: ${printReceived(received)}`
+        ),
+      pass: false,
     };
 
-  expect(actual).toHaveLength(expected.length);
+  if (received.length > expected.length) {
+    return {
+      message: () =>
+        formatLines(
+          `Received array has MORE items than expected`,
+          `Expected length: ${printExpected(expected.length)}`,
+          `Received length: ${printReceived(received.length)}`,
+          `Received array: ${printReceived(received)}`
+        ),
+      pass: false,
+    };
+  }
 
   const missingItems = [];
 
   for (const expectedItem of expected) {
     try {
-      expect(actual).toContainEqual(
+      expect(received).toContainEqual(
         strictEqual ? expectedItem : expect.objectContaining(expectedItem)
       );
     } catch {
@@ -29,35 +55,44 @@ const toMatchContentsInner = (actual, expected, strictEqual = false) => {
     }
   }
 
-  if (missingItems.length > 0)
+  if (missingItems.length === 0)
     return {
-      message: () =>
-        [
-          `Missing ${missingItems.length} items from the expected array`,
-          `Missing:`,
-          ...missingItems.map((item) => `- ${JSON.stringify(item)}`),
-          `Received Array ${JSON.stringify(actual)}`,
-        ].join(`\n`),
-      pass: false,
+      message: () => `Contained all matches`,
+      pass: true,
     };
 
+  const expectedPrefix = EXPECTED_COLOR("  - ");
+  const receivedPrefix = RECEIVED_COLOR("  + ");
   return {
-    message: () => `Contained all matches`,
-    pass: true,
+    message: () =>
+      formatLines(
+        `Missing ${pluralize(
+          strictEqual ? `item` : `matching item`,
+          missingItems.length
+        )} from the expected array`,
+        `Missing items:`,
+        ...missingItems.map(
+          (item) => `${expectedPrefix}${printExpected(item)}`
+        ),
+        `Received array:`,
+        `${receivedPrefix}${printReceived(received)}`
+      ),
+    pass: false,
   };
-};
+}
 
 expect.extend({
-  toMatchContents(actual, expected) {
+  toMatchContents(received, expected) {
     if (this.isNot)
       throw new Error(`toMatchContents cannot be used with '.not'`);
 
-    return toMatchContentsInner(actual, expected, false);
+    return toMatchContentsInner.call(this, received, expected, false);
   },
-  toEqualContents(actual, expected) {
+
+  toEqualContents(received, expected) {
     if (this.isNot)
       throw new Error(`toEqualContents cannot be used with '.not'`);
 
-    return toMatchContentsInner(actual, expected, true);
+    return toMatchContentsInner.call(this, received, expected, true);
   },
 });

@@ -26,16 +26,23 @@ describe("failing cases", () => {
   };
 
   it.each([
-    [() => expect(actual).toEqualContents(expectedSubset), `Missing 3 items`],
+    [
+      () => expect(actual).toEqualContents(expectedSubset),
+      `Missing three items`,
+    ],
     [
       () => expect(null).toMatchContents([]),
-      `Received value must be an array but got null`,
+      `Received value must be an array but got: null`,
     ],
     [
       () => expect([]).toMatchContents(null),
-      `Expected value must be an array but got null`,
+      `Expected value must be an array but got: null`,
     ],
-    [() => expect([]).toMatchContents([1]), `Received length: 0`],
+    [
+      () => expect([1, 2]).toMatchContents([1]),
+      `Received array has MORE items than expected`,
+    ],
+    [() => expect([]).toMatchContents([1]), `Missing one matching item`],
     [
       () => expect([]).not.toMatchContents(expected),
       `cannot be used with '.not'`,
@@ -53,7 +60,8 @@ describe("failing cases", () => {
         { name: "Charlie" },
       ]);
     const errorMessage = getMonochromeErrorMessage(codeUnderTest);
-    expect(errorMessage).toMatch(/Missing 1 items/);
-    expect(errorMessage).toMatch(/Missing:\s*- {"name":"Arnold"}/);
+    expect(errorMessage).toMatch(/Missing one matching item/);
+    expect(errorMessage).toMatch(/Missing items:/);
+    expect(errorMessage).toMatch(/{"name": "Arnold"}/);
   });
 });
